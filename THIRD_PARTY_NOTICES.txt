@@ -1,0 +1,143 @@
+THIRD PARTY NOTICES
+===================
+
+This repository is a mixed-licence publication. It combines material from
+several upstream projects with modifications developed for the Alif
+Semiconductor platform, published by Sirin Software as a collaboration
+snapshot. No single licence applies to the whole repository.
+
+This file lists the significant third-party components, where they come
+from, and where their licence terms can be found. It does not replace the
+notices contained in the individual files; those notices remain
+authoritative.
+
+
+1. TinyUSB (Git submodule: lib/tinyusb)
+---------------------------------------
+Used as:      the USB host stack, the CDC/MSC/HID host class drivers, the
+              Alif Ensemble host controller driver and the board support
+              package for the Alif E7 DevKit.
+Submodule:    https://github.com/sirinsoftware/tinyusb (branch: alif-usb-host)
+Lineage:      that repository is a fork whose content derives from upstream
+              TinyUSB, https://github.com/hathach/tinyusb. GitHub records its
+              fork parent as https://github.com/AlifSemi-Sirin/tinyusb_dev.
+Licence:      MIT, see lib/tinyusb/LICENSE; the MIT licence text is also
+              provided here as LICENSE-MIT.txt.
+Note:         the submodule additionally contains material that is not MIT
+              licensed. See sections 4 and 5 below.
+
+The host class drivers (src/host/, src/class/*/*_host.c) and the Alif
+Ensemble host controller driver (src/portable/alif/alif_e7_dk/hcd_ensemble.c)
+are compiled directly from the submodule; they are not copied into the
+example. hcd_ensemble.c carries a TinyUSB MIT notice.
+
+
+2. TinyUSB sources vendored into the example
+--------------------------------------------
+The example directory carries its own copy of the TinyUSB cdc_msc_hid host
+example sources:
+
+  host_cdc_msc_hid/src/
+    hid_app.c            unmodified TinyUSB source
+    main.c               TinyUSB example source, modified in this project
+    cdc_app.c            TinyUSB example source, modified in this project
+    msc_app.c            TinyUSB example source, modified in this project
+    tusb_config.h        TinyUSB example source, modified in this project
+
+Licence:      MIT, see LICENSE-MIT.txt.
+Copyright:    the copyright notices in these files name Ha Thach
+              (tinyusb.org). Those notices are retained unchanged.
+Modifications: developed for the Alif Semiconductor platform; see the
+              per-file notices and README.md.
+
+
+3. Alif Common Application Utilities (Git submodule: lib/alif_common-app-utils)
+-------------------------------------------------------------------------------
+Used as:      UART trace/logging support (logging/uart_tracelib.c).
+Source:       https://github.com/alifsemi/alif_common-app-utils
+Licence:      Alif Semiconductor Software License Agreement, see
+              lib/alif_common-app-utils/License.txt (also provided here as
+              LICENSE-ALIF.txt).
+
+
+4. Alif Semiconductor xHCI host controller sources (in lib/tinyusb)
+--------------------------------------------------------------------
+The USB host controller driver for the Ensemble xHCI block lives in the
+submodule under src/portable/xhci/ and is compiled into this example. The
+following files carry Alif Semiconductor copyright notices and are covered by
+the Alif Semiconductor Software License Agreement (LICENSE-ALIF.txt):
+
+    ux_hcd_xhci.c / .h            ux_hcd_xhci_api.h
+    ux_hcd_xhci_bulk_transfer.c   ux_hcd_xhci_control_transfer.c
+    ux_hcd_xhci_entry.c           ux_hcd_xhci_ep_bandwidth.c
+    ux_hcd_xhci_ep_reset.c        ux_hcd_xhci_hub.c
+    ux_hcd_xhci_initialize.c      ux_hcd_xhci_interrupt_handler.c
+    ux_hcd_xhci_interrupt_transfer.c
+    ux_hcd_xhci_isoc_transfer.c   ux_hcd_xhci_list.h
+    ux_hcd_xhci_mem_init.c        ux_hcd_xhci_port_enable.c
+    ux_hcd_xhci_port_status_get.c ux_hcd_xhci_td_process.c
+    ux_hcd_xhci_transfer_request.c
+
+
+5. Azure RTOS USBX material (in lib/tinyusb) — ATTENTION
+---------------------------------------------------------
+The xHCI driver above uses the USBX system and memory-allocator helpers. The
+following four files, compiled into this example, carry a Microsoft
+Corporation copyright notice and state that they are licensed under the
+"Microsoft Software License Terms for Microsoft Azure RTOS":
+
+    lib/tinyusb/src/portable/xhci/ux_system_initialize.c
+    lib/tinyusb/src/portable/xhci/ux_utility_memory_allocate.c
+    lib/tinyusb/src/portable/xhci/ux_utility_memory_free.c
+    lib/tinyusb/src/portable/xhci/ux_utility_memory_free_block_best_get.c
+
+Their headers point to https://aka.ms/AzureRTOS_EULA for the full text. That
+licence text is not included in this repository and is not covered by
+LICENSE-MIT.txt or LICENSE-ALIF.txt.
+
+Azure RTOS has since been contributed to the Eclipse Foundation as Eclipse
+ThreadX and relicensed under the MIT licence, but the files in this snapshot
+still carry the earlier Microsoft notice. Anyone redistributing or building
+on this code should establish which terms apply to these four files before
+doing so. This snapshot makes no determination on that question.
+
+
+6. CMSIS-Pack content under host_cdc_msc_hid/RTE/
+--------------------------------------------------
+The RTE directory holds configuration files copied out of CMSIS software
+packs by the CMSIS solution build tooling. They are pack content, not
+original work of this project, and are byte-identical to the pack baselines
+stored alongside them as "<name>.base@<version>" files.
+
+  AlifSemiconductor::Ensemble 2.0.2
+      https://github.com/alifsemi/alif_ensemble-cmsis-dfp
+      RTE/Device/... and RTE/BSP/... files carrying Alif Semiconductor
+      copyright notices. Licence: Alif Semiconductor Software License
+      Agreement, see LICENSE-ALIF.txt.
+
+  ARM::CMSIS 6.2.0
+      https://github.com/ARM-software/CMSIS_6
+      Licence: Apache-2.0.
+      host_cdc_msc_hid/RTE/Device/AE722F80F55D5LS_M55_HP/gcc_linker_script.ld.src
+      carries an Arm Limited copyright notice and an Apache-2.0
+      SPDX identifier; the licence text is available at
+      https://www.apache.org/licenses/LICENSE-2.0
+
+The RTE/_<build>_<target>/RTE_Components.h files are generated by the CMSIS
+solution tooling and are marked "DO NOT EDIT".
+
+
+7. Alif Semiconductor VS Code template scaffolding
+--------------------------------------------------
+The CMSIS solution scaffolding and the editor/debug/flashing configuration
+follow the Alif Semiconductor VS Code template:
+
+    https://github.com/alifsemi/alif_vscode-template
+
+Files: alif.csolution.yml, cdefault.yml, alif.cbuild-pack.yml,
+vcpkg-configuration.json, host_cdc_msc_hid/host_cdc_msc_hid.cproject.yml,
+.vscode/ and .alif/.
+
+Licence:      Alif Semiconductor Software License Agreement. LICENSE-ALIF.txt
+              in this repository is a verbatim copy of the License.txt
+              distributed with that template.

@@ -1,0 +1,6 @@
+[submodule "lib/alif_common-app-utils"]
+	path = lib/alif_common-app-utils
+	url = https://github.com/alifsemi/alif_common-app-utils.git
+[submodule "lib/tinyusb"]
+	path = lib/tinyusb
+	url = https://github.com/sirinsoftware/tinyusb

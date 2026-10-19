@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/tools/projmgr/2.6.0/tools/projmgr/schemas/cproject.schema.json
+# This file follows the project scaffolding of the Alif Semiconductor VS Code
+# template (https://github.com/alifsemi/alif_vscode-template), which is
+# distributed under the Alif Semiconductor Software License Agreement; a copy
+# is provided in LICENSE-ALIF.txt.
+#
+# Adapted and extended for the Alif Semiconductor platform. Published by
+# Sirin Software as a collaboration snapshot.
+#
+# This repository combines material under several licences; see README.md and
+# THIRD_PARTY_NOTICES.txt.
+
+project:
+  define:
+    - CFG_TUSB_MCU: OPT_MCU_NONE
+    - TUP_DCD_ENDPOINT_MAX: 4
+    - TUD_OPT_RHPORT: 0
+    - BOARD_TUD_MAX_SPEED: OPT_MODE_HIGH_SPEED
+    - SECTION_USB_DMA_BUF: \"usb_dma_buf\"
+    - CFG_TUSB_MEM_SECTION: __attribute__\(\(section\(SECTION_USB_DMA_BUF\)\)\)
+    - CFG_TUSB_MEM_ALIGN: __attribute__\(\(aligned\(32\)\)\)
+    - CFG_TUSB_RHPORT0_MODE: OPT_MODE_HOST
+    - CFG_TUH_MEM_SECTION: CFG_TUSB_MEM_SECTION
+
+  groups:
+    - group: TinyUSB host example with CDC-ACM/MSC/HID
+      files:
+        - file: src/main.c
+        - file: src/cdc_app.c
+        - file: src/msc_app.c
+        - file: src/hid_app.c
+
+    - group: Alif UART lib
+      files:
+        - file: ../lib/alif_common-app-utils/logging/uart_tracelib.c
+        
+    - group: Alif BSP & USB low level driver for TinyUSB host mode
+      files:
+        - file: ../lib/tinyusb/hw/bsp/alif/family.c
+        - file: ../lib/tinyusb/src/portable/alif/alif_e7_dk/hcd_ensemble.c
+
+    - group: TinyUSB
+      files:
+        - file: ../lib/tinyusb/src/tusb.c
+        - file: ../lib/tinyusb/src/common/tusb_fifo.c
+        - file: ../lib/tinyusb/hw/bsp/board.c
+        - file: ../lib/tinyusb/src/host/usbh.c
+        - file: ../lib/tinyusb/src/host/hub.c        
+        - file: ../lib/tinyusb/src/class/cdc/cdc_host.c
+        - file: ../lib/tinyusb/src/class/msc/msc_host.c
+        - file: ../lib/tinyusb/src/class/hid/hid_host.c
+
+    - group: TinyUSB host xHCI Driver sources
+      files:
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_bulk_transfer.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_hub.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_port_enable.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_initialize.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_port_status_get.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_control_transfer.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_interrupt_handler.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_td_process.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_entry.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_interrupt_transfer.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_transfer_request.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_ep_bandwidth.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_isoc_transfer.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_ep_reset.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_hcd_xhci_mem_init.c
+
+        - file: ../lib/tinyusb/src/portable/xhci/ux_system_initialize.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_utility_memory_allocate.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_utility_memory_free.c
+        - file: ../lib/tinyusb/src/portable/xhci/ux_utility_memory_free_block_best_get.c
+
+  add-path:
+    - ./
+    - src/
+    - ../lib/alif_common-app-utils/logging
+    - ../lib/tinyusb/src/portable/alif/alif_e7_dk
+    - ../lib/tinyusb/src/portable/xhci
+    - ../lib/tinyusb/src
+    - ../lib/tinyusb/hw
+    - ../lib/tinyusb/hw/bsp/alif/boards/alif_e7_dk
+
+  components:
+    - component: ARM::CMSIS:CORE
+    - component: AlifSemiconductor::Device:Startup
+    - component: AlifSemiconductor::Device:SOC Peripherals:PINCONF
+    - component: AlifSemiconductor::Device:SOC Peripherals:GPIO
+    - component: AlifSemiconductor::CMSIS Driver:USART
+    - component: Device:SOC Peripherals:MHU
+    - component: Services:Secure Enclave:core&Source
+    - component: Services:Secure Enclave:Initialization Helper&Source
+    - component: AlifSemiconductor::BSP:Board Config
+    - component: AlifSemiconductor::BSP:DevKit Config&DevKit-e7
+      for-context:
+        - +E7-HE
+        - +E7-HP
+
+  output:
+    base-name: $Project$
+    type:
+      - elf
+      - bin
